@@ -7,7 +7,7 @@
 #include <string.h>
 #include "wordlist.h"
 
-#define VER "0.2"
+#define VER "0.3"
 #define YEAR "2025"
 #define NAME "ZXORDLE"
 
@@ -87,19 +87,9 @@ void menu(){
 }
 
 void drawGameScreen(){
-    printStringAt(4,11, "@@@@@@@@@");
-    printStringAt(5,11, "@@@@@@@@@");  
-    printStringAt(6,11, "@@@@@@@@@");
-    printStringAt(7,11, "@@@@@@@@@");  
-    printStringAt(8,11, "@@@@@@@@@");
-    printStringAt(9,11, "@@@@@@@@@");  
-    printStringAt(10,11, "@@@@@@@@@");
-    printStringAt(11,11, "@@@@@@@@@");  
-    printStringAt(12,11, "@@@@@@@@@");
-    printStringAt(13,11, "@@@@@@@@@");
-    printStringAt(14,11, "@@@@@@@@@");  
-    printStringAt(15,11, "@@@@@@@@@");  
-    printStringAt(16,11, "@@@@@@@@@");  
+    for (int8_t line = 4; line < 17; line++){
+      printStringAt(line, 11, "@@@@@@@@@");
+    }
 }
 
 void drawGameKey(){
