@@ -12,7 +12,7 @@ Load the zxordle.P file on your ZX81, TS1000, TS1500 or compatible emulator and 
 
 zxordle is written in C using the Z88DK development kit for Z80 systems.
 
-It has been compiled with the following command:
+Once the Z88DK development kit is installed on a modern system, zxordle can compiled by running the following command:
 ```
-zcc +zx81 -vn -create-app -lm81_tiny -m zxordle.c -o zxordle.bin
+make
 ```
