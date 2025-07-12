@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <graphics.h>
 #include <input.h>
 #include <time.h>
 #include <zx81.h>
