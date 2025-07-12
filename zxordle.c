@@ -9,7 +9,7 @@
 #include <string.h>
 #include "wordlist.h"
 
-#define VER "0.3"
+#define VER "0.4"
 #define YEAR "2025"
 #define NAME "ZXORDLE"
 
