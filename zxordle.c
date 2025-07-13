@@ -9,7 +9,7 @@
 #include <string.h>
 #include "wordlist.h"
 
-#define VER "0.3"
+#define VER "0.4"
 #define YEAR "2025"
 #define NAME "ZXORDLE"
 
@@ -102,9 +102,11 @@ void drawGameKey(){
 }
 
 char* selectWord(){
-  int words = sizeof(wordlist) / sizeof(wordlist[0]);
-  int randomIndex = rand() % words; // Get a random index
-  char *selectedWord = wordlist[randomIndex]; // Select a random word
+  int words = sizeof(wordlist) / WORDLENGTH;
+  int randomIndex = rand() % words; // Get a random word index
+  char *selectedWord = (char *)malloc(WORDLENGTH + 1);
+  memcpy(selectedWord, wordlist[randomIndex], WORDLENGTH); // Copy randomly chosen word
+  selectedWord[WORDLENGTH] = '\0';
   return selectedWord;
 }
 
@@ -156,6 +158,7 @@ void queryWords(char *word){
           printStringAt(20, 5, "you correctly guessed");
           printStringAt(21, 2, attemptMsg);
         }
+        free(word);
         return;
     }else{
       for (int8_t j = 0; j < 5; j++){ // check for correct letters
@@ -174,6 +177,7 @@ void queryWords(char *word){
     snprintf(attemptMsg, sizeof(attemptMsg), "you did not find the word %s", upperWord);
     printStringAt(19, 13, "sorry");
     printStringAt(20, 0, attemptMsg);
+    free(word);
   }
 }
 
