@@ -121,7 +121,6 @@ int queryWords(char *word){
   int8_t attempt = 0;
   char* ordinal[6] = {"first", "second", "third", "fourth", "fifth", "sixth"};
   char upperWord[6];
-  printf("word is %s\n", word);
   for (int k = 0; k < 5; k++) {
       upperWord[k] = word[k] - 32; // convert to uppercase
   }
