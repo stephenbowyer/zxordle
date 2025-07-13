@@ -2,5 +2,6 @@
 *.bin
 *.map
 *.P
+*.O
 *~
 zesarux_index_menu.idx

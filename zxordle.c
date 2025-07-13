@@ -4,9 +4,8 @@
 #include <graphics.h>
 #include <input.h>
 #include <time.h>
-#include <zx81.h>
-#include <math.h>
 #include <string.h>
+#include <zx81.h>
 #include "wordlist.h"
 
 #define VER "0.5"
@@ -25,37 +24,47 @@ int printCharAt(int8_t y, int8_t x, char text){
 
 char newGetChar(bool block){
   char input;
-  if (block)
-  {
-    in_WaitForNoKey();  
-    in_WaitForKey();
-  }
-  while((input=in_Inkey()))
-  {
-    if ((input != NULL) && (block))
-      in_WaitForNoKey();
+  #ifdef __ZX80__
+    input = fgetc_cons();
     if ((input >= 0x41) && (input <= 0x5A)) // convert uppercase to lowercase
       input += 32;
     return(input);
-  }  
+  #endif
+  #ifdef __ZX81__
+    if (block)
+    {
+      in_WaitForNoKey();  
+      in_WaitForKey();
+    }
+    while((input=in_Inkey()))
+    {
+      if ((input != NULL) && (block))
+        in_WaitForNoKey();
+      if ((input >= 0x41) && (input <= 0x5A)) // convert uppercase to lowercase
+        input += 32;
+      return(input);
+    }
+  #endif
 }
 
-void animateLogo(int8_t position){
-    int8_t ranPos = rand() % 7; // which character to animate
-    int8_t ranColour = rand() % 2; // which colour to use
-    char* myName = NAME;
-    char* myChar = myName[ranPos];
-    if (ranColour == 1)
-        myChar += 32; // convert to lowercase for black on white
-    printCharAt(position, 12+ranPos, myChar);
-}
+#ifdef __ZX81__
+  void animateLogo(int8_t position){
+      int8_t ranPos = rand() % 7; // which character to animate
+      int8_t ranColour = rand() % 2; // which colour to use
+      char* myName = NAME;
+      char* myChar = myName[ranPos];
+      if (ranColour == 1)
+          myChar += 32; // convert to lowercase for black on white
+      printCharAt(position, 12+ranPos, myChar);
+  }
 
-void flashCursor(int8_t y, int8_t x, int8_t colour){
-  if (colour == 0)
-    printCharAt(y, x, ' ');
-  else
-    printCharAt(y, x, '@');
-}
+  void flashCursor(int8_t y, int8_t x, int8_t colour){
+    if (colour == 0)
+      printCharAt(y, x, ' ');
+    else
+      printCharAt(y, x, '@');
+  }
+#endif
 
 void displayScore(unsigned long currscore, unsigned long maxscore){
     char scoremsg[32];
@@ -65,7 +74,6 @@ void displayScore(unsigned long currscore, unsigned long maxscore){
 }
 
 void menu(){
-    int8_t randomSeed = 0;
     zx_cls(); // 32 char screen width
     printStringAt(4,11, "@@@@@@@@@");
     printStringAt(5,11, "@ZXORDLE@");
@@ -81,8 +89,10 @@ void menu(){
     printStringAt(14,2, "attempts are offered to guess");
     printStringAt(15,3, "the hidden five-letter word");
     printStringAt(18,6, "press any key to start");
-    zx_slow();
-    srand(randomSeed);
+    #ifdef __ZX81__
+      zx_slow();
+    #endif
+    srand((unsigned int) time(NULL));
     while(true){
         char input = newGetChar(false);
         if (input != NULL){
@@ -91,7 +101,9 @@ void menu(){
             scrolluptxt(); scrolluptxt(); scrolluptxt(); scrolluptxt();
             break;
         }
-        animateLogo(5);
+        #ifdef __ZX81__
+          animateLogo(5);
+        #endif
     }
 }
 
@@ -131,7 +143,7 @@ int queryWords(char *word){
     {
         char attemptMsg[32];
         snprintf(attemptMsg, sizeof(attemptMsg), " please type your %s guess ", ordinal[i-1]);
-        printStringAt(20, floor(32-strlen(attemptMsg)), attemptMsg);
+        printStringAt(20, 32-strlen(attemptMsg), attemptMsg);
     }
     for (int8_t j = 0; j < 5; j++){
         input[j] = '';
@@ -139,18 +151,25 @@ int queryWords(char *word){
         int counter = 0;
         do{
           input[j] = newGetChar(false);
-          if (counter++ > 300){
-            flashCursor((i*2)+3, j+13, colour);
-            colour = 1 - colour;
-            counter = 0;
-          }
+          #ifdef __ZX81__
+            if (counter++ > 300){
+              flashCursor((i*2)+3, j+13, colour);
+              colour = 1 - colour;
+              counter = 0;
+            }
+          #endif
         } while(!((input[j] >= 0x61) && (input[j] <= 0x7A) || (input[j] == 0x0c)));
         in_WaitForNoKey();
         if ((input[j] >= 0x61) && (input[j] <= 0x7A)) // alphabetic characters
           printCharAt((i*2)+3, j+13, input[j]);
         else
           if (input[j] == 0x0c && j > 0){ // rubout / delete
-            flashCursor((i*2)+3, j+13, 0); // clear flashing cursor 
+            #ifdef __ZX80__
+              printCharAt((i*2)+3, j+12, ' '); // clear deleted character
+            #endif
+            #ifdef __ZX81__
+              flashCursor((i*2)+3, j+13, 0); // clear deleted character and flashing cursor
+            #endif
             j=j-2;
           }
           else
@@ -196,6 +215,9 @@ int queryWords(char *word){
 void main(){
   unsigned long currscore = 0;
   unsigned long maxscore = 0;
+    #ifdef __ZX80__
+      scrolluptxt(); // help initial screen clear
+    #endif
     while(true){
         menu();
         drawGameScreen();
