@@ -151,7 +151,7 @@ int queryWords(char *word){
           printCharAt((i*2)+3, j+13, input[j]);
         else
           if (input[j] == 0x0c && j > 0){ // rubout / delete
-            flashCursor((i*2)+3, j+13, 0); // clear flashing cursor
+            flashCursor((i*2)+3, j+13, 0); // clear flashing cursor 
             j=j-2;
           }
           else
