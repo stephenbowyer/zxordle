@@ -57,6 +57,13 @@ void flashCursor(int8_t y, int8_t x, int8_t colour){
     printCharAt(y, x, '@');
 }
 
+void displayScore(unsigned long currscore, unsigned long maxscore){
+    char scoremsg[32];
+    snprintf(scoremsg, sizeof(scoremsg), "%lu/%lu", currscore, maxscore);
+    printStringAt(0, 27, "score");
+    printStringAt(1, 32-strlen(scoremsg), scoremsg);
+}
+
 void menu(){
     int8_t randomSeed = 0;
     zx_cls(); // 32 char screen width
@@ -110,10 +117,11 @@ char* selectWord(){
   return selectedWord;
 }
 
-void queryWords(char *word){
+int queryWords(char *word){
   int8_t attempt = 0;
   char* ordinal[6] = {"first", "second", "third", "fourth", "fifth", "sixth"};
   char upperWord[6];
+  printf("word is %s\n", word);
   for (int k = 0; k < 5; k++) {
       upperWord[k] = word[k] - 32; // convert to uppercase
   }
@@ -160,7 +168,10 @@ void queryWords(char *word){
           printStringAt(21, 2, attemptMsg);
         }
         free(word);
-        return;
+        if (i == 6)
+          return(10); // score 10 for sixth attempt
+        else
+          return(100 - (20 * (i-1))); //score 100 for first attempt, minus 20 for each subsequent attempt
     }else{
       for (int8_t j = 0; j < 5; j++){ // check for correct letters
         if (input[j] == word[j]){
@@ -180,14 +191,20 @@ void queryWords(char *word){
     printStringAt(20, 0, attemptMsg);
     free(word);
   }
+  return(0);
 }
 
 void main(){
+  unsigned long currscore = 0;
+  unsigned long maxscore = 0;
     while(true){
         menu();
         drawGameScreen();
         drawGameKey();
-        queryWords(selectWord());
+        displayScore(currscore, maxscore);
+        currscore += queryWords(selectWord());
+        maxscore += 100;
+        displayScore(currscore, maxscore);
         printStringAt(23, 4, "press any key to restart");
         newGetChar(true);
       }
