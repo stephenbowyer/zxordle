@@ -9,7 +9,7 @@
 #include <string.h>
 #include "wordlist.h"
 
-#define VER "0.4"
+#define VER "0.5"
 #define YEAR "2025"
 #define NAME "ZXORDLE"
 
@@ -151,7 +151,7 @@ int queryWords(char *word){
           printCharAt((i*2)+3, j+13, input[j]);
         else
           if (input[j] == 0x0c && j > 0){ // rubout / delete
-            printCharAt((i*2)+3, j+12, ' ');
+            flashCursor((i*2)+3, j+13, 0); // clear flashing cursor
             j=j-2;
           }
           else
