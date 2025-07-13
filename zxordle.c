@@ -80,7 +80,7 @@ void menu(){
         char input = newGetChar(false);
         if (input != NULL){
             printStringAt(5,12, "ZXORDLE");
-            clga(0, 16, 64, 24);
+            clga(0, 16, 64, 24); // clear everything except logo
             scrolluptxt(); scrolluptxt(); scrolluptxt(); scrolluptxt();
             break;
         }
@@ -153,7 +153,8 @@ void queryWords(char *word){
     if (strcmp(input, word) == 0){
         {
           char attemptMsg[32];
-          snprintf(attemptMsg, sizeof(attemptMsg), "%s on your %s attempt", upperWord, ordinal[i]);
+          snprintf(attemptMsg, sizeof(attemptMsg), "%s on your %s attempt", upperWord, ordinal[i-1]);
+          clga(0, 38, 64, 6); // clear the bottom of the screen
           printStringAt(19, 8,    "congratulations");
           printStringAt(20, 5, "you correctly guessed");
           printStringAt(21, 2, attemptMsg);
