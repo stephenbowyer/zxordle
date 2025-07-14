@@ -75,10 +75,6 @@ char newGetChar(bool block){
         else
           ranColour *= 2;
         snprintf(animChar, sizeof(animChar), "\x11%c%c\x11\x07", ranColour, myChar);
-        // if (ranColour == 1)
-        //   snprintf(animChar, sizeof(animChar), "%s%c%s", DARK, myChar, LIGHT);
-        // else
-        //   snprintf(animChar, sizeof(animChar), "%c", myChar);
         printStringAt(position, 12+ranPos, animChar);
       #endif
   }
