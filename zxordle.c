@@ -17,7 +17,7 @@
 #include "wordlist.h"
 #include "messages.h"
 
-#define VER "0.5"
+#define VER "0.6"
 #define YEAR "2025"
 
 int printStringAt(int8_t y, int8_t x, char *text){
