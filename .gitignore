@@ -3,5 +3,6 @@
 *.map
 *.P
 *.O
+*.tap
 *~
 zesarux_index_menu.idx
