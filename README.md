@@ -1,6 +1,6 @@
 # zxordle
 
-**zxordle** is a word puzzle game designed to run on the Sinclair ZX80, Sinclair ZX81, Sinclair ZX Spectrum and compatible Timex Sinclar computers with at least 16KB of RAM. It's based on a game originally by Josh Wardle.
+**zxordle** is a word puzzle game designed to run on the Sinclair ZX80, Sinclair ZX81, Sinclair ZX Spectrum and compatible Timex Sinclair computers with at least 16KB of RAM. It's based on a game originally by Josh Wardle.
 
 Players have six attempts to guess a hidden five-letter word. After each guess, the game provides feedback to help narrow down the possibilities.
 
