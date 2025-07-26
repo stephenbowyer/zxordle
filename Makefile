@@ -1,7 +1,7 @@
-# Makefile for zxordle
+# Makefile for worzxle
 
-TARGET = zxordle
-SRC = zxordle.c
+TARGET = worzxle
+SRC = worzxle.c
 
 all: $(TARGET).P $(TARGET).O ${TARGET}.tap
 

@@ -2,7 +2,7 @@
 #ifndef MESSAGES_H
 #define MESSAGES_H
 
-#define MSG_NAME "ZXORDLE"
+#define MSG_NAME "WORZXLE"
 
 #define ORDINALS {"first", "second", "third", "fourth", "fifth", "sixth"}
 
