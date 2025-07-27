@@ -60,7 +60,17 @@
     #define MSG_START "Press any key to start"
     #define MSG_RESTART "Press any key to restart"
 
-//    #define MSG_RESULT_Y "\x14\x31Y\x14\x30"
+    #define MSG_TRAD_PRESS "Press T for traditional mode"
+    #define MSG_TRAD_ON "Traditional mode ON"
+    #define MSG_TRAD_OFF "Traditional mode OFF"
+
+    #define MSG_COLOUR_Y_ON "\x11\x04"
+    #define MSG_COLOUR_Y_OFF "\x11\x07"
+    #define MSG_COLOUR_P_ON "\x11\x06"
+    #define MSG_COLOUR_P_OFF "\x11\x07"
+    #define MSG_COLOUR_N_ON "\x11\x02"
+    #define MSG_COLOUR_N_OFF "\x11\x07"
+
     #define MSG_RESULT_Y "\x11\x04Y\x11\x07"
     #define MSG_RESULT_P "\x11\x06P\x11\x07"
     #define MSG_RESULT_N "\x11\x02N\x11\x07"

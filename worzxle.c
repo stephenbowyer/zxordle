@@ -100,7 +100,8 @@ void printLogo(int8_t y, int8_t x){
   printStringAt(y,x, logoMsg);
 }
 
-void menu(){
+bool menu(tradmode){
+    bool newtradmode = tradmode;
     zx_cls(); // 32 char screen width
     printStringAt(4,11, MSG_BLACK_LINE);
     printLogo(5,11);
@@ -116,6 +117,9 @@ void menu(){
     printStringAt(14,2, MSG_DESC2);
     printStringAt(15,3, MSG_DESC3);
     printStringAt(18,6, MSG_START);
+    #ifdef __SPECTRUM__
+      printStringAt(20,3, MSG_TRAD_PRESS);
+    #endif
     #ifdef __ZX81__
       zx_slow();
     #endif
@@ -123,16 +127,30 @@ void menu(){
     while(true){
         char input = newGetChar(false);
         loopCount++;
+        #ifdef __SPECTRUM__
+          if (input == 't'){
+            in_WaitForNoKey();
+            newtradmode = !newtradmode;
+            {
+              char tradMsg[32];
+              if (newtradmode)
+                snprintf(tradMsg, sizeof(tradMsg), "    %s     ", MSG_TRAD_ON);
+              else
+                snprintf(tradMsg, sizeof(tradMsg), "    %s     ", MSG_TRAD_OFF);
+              printStringAt(20, 3, tradMsg);
+            }
+          }
+        #endif
         if (input != NULL){
             printLogo(5,11);
             #if defined(__ZX81__) || defined(__ZX80__)
               clga(0, 16, 64, 24); // clear everything except logo
             #elif defined(__SPECTRUM__)
-              clga(0, 60, 250, 100); // clear everything except logo
+              clga(0, 60, 250, 110); // clear everything except logo
             #endif
             scrolluptxt(); scrolluptxt(); scrolluptxt(); scrolluptxt();
             srand((unsigned int) time(NULL) + loopCount);
-            break;
+            return(newtradmode);
         }
         #if defined(__ZX81__) || defined(__SPECTRUM__)
           if (loopCount % 20 == 0)
@@ -162,7 +180,7 @@ char* selectWord(){
   return selectedWord;
 }
 
-int queryWords(char *word){
+int queryWords(char *word, bool tradmode){
   int8_t attempt = 0;
   char* ordinal[6] = ORDINALS; // {"first", "second", "third", "fourth", "fifth", "sixth"};
   char upperWord[6];
@@ -228,13 +246,31 @@ int queryWords(char *word){
       for (int8_t j = 0; j < 5; j++){ // check for correct letters
         char resultMsg[6];
         if (input[j] == word[j]){
-          snprintf(resultMsg, sizeof(resultMsg), "%s", MSG_RESULT_Y);
+          #ifdef __SPECTRUM__
+            if (tradmode)
+              snprintf(resultMsg, sizeof(resultMsg), "%s%c%s", MSG_COLOUR_Y_ON, input[j], MSG_COLOUR_Y_OFF);
+          #endif
+          if (!tradmode)
+            snprintf(resultMsg, sizeof(resultMsg), "%s", MSG_RESULT_Y);
         } else if (strchr(word, input[j]) != NULL) {
-          snprintf(resultMsg, sizeof(resultMsg), "%s", MSG_RESULT_P);
+          #ifdef __SPECTRUM__
+            if (tradmode)
+              snprintf(resultMsg, sizeof(resultMsg), "%s%c%s", MSG_COLOUR_P_ON, input[j], MSG_COLOUR_P_OFF);
+          #endif
+          if (!tradmode)
+            snprintf(resultMsg, sizeof(resultMsg), "%s", MSG_RESULT_P);
         } else {
-          snprintf(resultMsg, sizeof(resultMsg), "%s", MSG_RESULT_N);
+          #ifdef __SPECTRUM__
+            if (tradmode)
+              snprintf(resultMsg, sizeof(resultMsg), "%s%c%s", MSG_COLOUR_N_ON, input[j], MSG_COLOUR_N_OFF);
+          #endif
+          if (!tradmode)
+            snprintf(resultMsg, sizeof(resultMsg), "%s", MSG_RESULT_N);
         }
-        printStringAt((i*2)+4, j+13, resultMsg);
+        if (tradmode)
+          printStringAt((i*2)+3, j+13, resultMsg);
+        else
+          printStringAt((i*2)+4, j+13, resultMsg);
       }
     }
   }
@@ -251,15 +287,16 @@ int queryWords(char *word){
 void main(){
   unsigned long currscore = 0;
   unsigned long maxscore = 0;
+  bool tradmode = false;
     #ifdef __ZX80__
       scrolluptxt(); // help initial screen clear
     #endif
     while(true){
-        menu();
+        tradmode = menu(tradmode);
         drawGameScreen();
         drawGameKey();
         displayScore(currscore, maxscore);
-        currscore += queryWords(selectWord());
+        currscore += queryWords(selectWord(), tradmode);
         maxscore += 100;
         displayScore(currscore, maxscore);
         printStringAt(23, 4, MSG_RESTART);
