@@ -253,25 +253,25 @@ int queryWords(char *word, bool tradmode){
         printStringAt((i*2)+3, j+13, resultMsg);
       else
         printStringAt((i*2)+4, j+13, resultMsg);
-      if (strcmp(input, word) == 0){
-          {
-            char attemptMsg[32];
-            snprintf(attemptMsg, sizeof(attemptMsg), "%s%s%s %s %s %s", DARK, upperWord, LIGHT, MSG_ON, ordinal[i-1], MSG_ATTEMPT);
-            #ifdef __SPECTRUM__
-              clga(0, 140, 250, 50); // clear the bottom of the screen
-            #else
-              clga(0, 38, 64, 6); // clear the bottom of the screen
-            #endif
-            printStringAt(19, 8, MSG_CONGRATULATIONS);
-            printStringAt(20, 5, MSG_CORRECT);
-            printStringAt(21, 2, attemptMsg);
-          }
-          free(word);
-          if (i == 6)
-            return(10); // score 10 for sixth attempt
-          else
-            return(100 - (20 * (i-1))); //score 100 for first attempt, minus 20 for each subsequent attempt
-      }
+    }
+    if (strcmp(input, word) == 0){
+        {
+          char attemptMsg[32];
+          snprintf(attemptMsg, sizeof(attemptMsg), "%s%s%s %s %s %s", DARK, upperWord, LIGHT, MSG_ON, ordinal[i-1], MSG_ATTEMPT);
+          #ifdef __SPECTRUM__
+            clga(0, 140, 250, 50); // clear the bottom of the screen
+          #else
+            clga(0, 38, 64, 6); // clear the bottom of the screen
+          #endif
+          printStringAt(19, 8, MSG_CONGRATULATIONS);
+          printStringAt(20, 5, MSG_CORRECT);
+          printStringAt(21, 2, attemptMsg);
+        }
+        free(word);
+        if (i == 6)
+          return(10); // score 10 for sixth attempt
+        else
+          return(100 - (20 * (i-1))); //score 100 for first attempt, minus 20 for each subsequent attempt
     }
   }
   {
